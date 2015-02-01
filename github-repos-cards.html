@@ -1,0 +1,96 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../polymer-jsonp/polymer-jsonp.html">
+<link rel="import" href="../paper-shadow/paper-shadow.html">
+<link rel="import" href="../core-icons/core-icons.html">
+
+<!--
+A Polymer web component that fetches public git repository data from Github. The data is fetched using the Github API v3.
+
+##### Example
+
+    <github-repos-cards request="https://api.github.com/users/vanxrice/repos?type=owner&sort=updated&direction=desc">
+    </github-repos-cards>
+
+@element github-repos-cards
+@blurb A Polymer web component that fetches public git repository data from Github.
+@status alpha
+@homepage http://vanxrice.github.io/github-repos-cards
+@demo http://vanxrice.github.io/github-repos-cards/demo.html
+-->
+<polymer-element name="github-repos-cards" attributes="request">
+  <template is="auto binding">
+    <link rel="stylesheet" href="github-repos-cards.css">
+
+    <polymer-jsonp auto handleAs="json"
+      url="{{request + '&callback='}}"
+      response="{{response}}"
+      on-polymer-response="{{onResponse}}">
+    </polymer-jsonp>
+
+    <div vertical layout center start>
+      <template bind="{{response.data[0].owner as owner}}">
+        <a href="{{owner.html_url}}">{{owner.login}}</a href="{{owner.html_url}}">
+        <div horizontal center layout>
+          <p>{{sumStars()}}</p>
+          <core-icon icon="star" style="width: 20px; height: 20px;"></core-icon>
+        </div>
+      </template>
+    </div>
+
+    <div horizontal layout wrap around-justified>
+      <template repeat="{{response.data as repository}}">
+        <paper-shadow z="2" class="card">
+          <div class="head" horizontal layout>
+            <span flex>{{repository.name}}</span>
+            <div horizontal center layout>
+              <p>{{repository.stargazers_count}}</p>
+              <core-icon icon="star" style="width: 20px; height: 20px;"></core-icon>
+            </div>
+
+          </div>
+        </paper-shadow>
+      </template>
+    </div>
+
+    <content></content>
+  </template>
+  <script>
+    Polymer('github-repos-cards', {
+      /**
+       * The `request` attribute sets the request string for a JSONP request. This string should contain all
+       * request parameters, and expects the request to contain '?' as a callback parameter will be appended.
+       *   url="{{request + '&callback='}}"
+       *
+       * See Github's documentation for more information, https://developer.github.com/v3/repos/.
+       *
+       * @attribute request
+       * @type string
+       * @default 'https://api.github.com/users/octocat/repos?'
+       */
+      request: 'https://api.github.com/users/octocat/repos?',
+
+      ready: function () {
+        // Ready is a lifecycle callback.
+        // You can do setup work in here.
+        // More info: http://www.polymer-project.org/docs/polymer/polymer.html#lifecyclemethods
+        console.log('ready');
+      },
+
+      onResponse: function (e) {
+        console.log(this.response);
+      },
+
+      sumStars: function() {
+        var total = 0;
+        if (this.response && this.response.data) {
+          console.log(this.response.data);
+          this.response.data.forEach(function(repo) {
+            total += repo.stargazers_count;
+          });
+        }
+        return total;
+      }
+    });
+  </script>
+</polymer-element>
