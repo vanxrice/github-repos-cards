@@ -66,7 +66,15 @@
       insert.appendChild(starDiv);
 
       var githubRepoCard = document.createElement('github-repo-card');
-      githubRepoCard.repository = data[0];
+      // var data = data[0];
+      var data = {};
+      data.name = 'AllTheThings';
+      data.description = 'This is a <github-repo-card> created with a user generated object.';
+      data.html_url = 'https://github.com/octocat/Spoon-Knife';
+      data.default_branch = 'master';
+      data.updated_at = "2015-01-21T17:29:25Z";
+      
+      githubRepoCard.repository = data;
       var insert2 = document.getElementById('insert2');
       insert2.appendChild(githubRepoCard);
     });

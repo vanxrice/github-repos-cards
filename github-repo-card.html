@@ -28,8 +28,8 @@ A Polymer element that displays a Github repository object in a card
       <div class="repo-head text-title" horizontal layout>
         <a href="{{repository.html_url}}" horizontal layout center flex>{{repository.name}}</a>
         <div horizontal center layout class="repo-stats">
-          <core-item class="small first-icon" icon="star" label="{{repository.stargazers_count}}"></core-item>
-          <core-item class="small" icon="visibility" label="{{repository.watchers_count}}"></core-item>
+          <core-item class="small first-icon" icon="star" label="{{repository.stargazers_count || 0}}"></core-item>
+          <core-item class="small" icon="visibility" label="{{repository.watchers_count || 0}}"></core-item>
         </div>
       </div>
 
