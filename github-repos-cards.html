@@ -21,7 +21,7 @@ this element, see the demo for an example.
 @homepage http://vanxrice.github.io/github-repos-cards
 @demo http://vanxrice.github.io/github-repos-cards/demo.html
 -->
-<polymer-element name="github-repos-cards" attributes="request response">
+<polymer-element name="github-repos-cards" attributes="request response maxRepoCount">
   <template is="auto binding">
     <link rel="stylesheet" href="github-repos-cards.css">
 
@@ -32,7 +32,7 @@ this element, see the demo for an example.
     </polymer-jsonp>
 
     <div horizontal layout wrap around-justified>
-      <template repeat="{{response.data as repository}}">
+      <template repeat="{{repositories as repository}}">
         <github-repo-card repository="{{repository}}"></github-repo-card>
       </template>
     </div>
@@ -66,10 +66,25 @@ this element, see the demo for an example.
        */
       response: null,
 
+      /**
+       * The `maxRepoCount` attribute is the upper limit of repos to show from the request. It uses the first
+       * N repos up to maxRepoCount (i.e. request.data[0..maxRepoCount])
+       *
+       * @attribute maxRepoCount
+       * @type int
+       * @default null
+       */
+      maxRepoCount: null,
+
       ready: function () {
       },
 
       onResponse: function (e) {
+        if (this.maxRepoCount && this.response.data.length > this.maxRepoCount) {
+          this.repositories = this.response.data.slice(0, this.maxRepoCount); // remove repos
+        } else {
+          this.repositories = this.response.data;
+        }
       }
     });
   </script>

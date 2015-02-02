@@ -15,8 +15,7 @@
   <body unresolved>
     <p>An `github-repos-cards` looks like this:</p>
 
-    <github-repos-cards request="https://api.github.com/users/vanxrice/repos?type=owner&sort=updated&direction=desc">
-    </github-repos-cards>
+    <github-repos-cards request="https://api.github.com/users/vanxrice/repos?type=owner&sort=updated&direction=desc"></github-repos-cards>
 
     <p>Javascript ninjas can use the response object as they wish, you could create something like this for a header or footer:
     <div vertical layout center start id="insert">
@@ -25,8 +24,13 @@
     <p>The card is available as a standalone element, `github-repo-card` looks like this:</p>
     <div vertical layout center start id='insert2'></div>
 
+    <p>You may also limit the number of repos shown:</p>
+    <github-repos-cards request="https://api.github.com/users/vanxrice/repos?" maxRepoCount="3"></github-repos-cards>
+
   </body>
   <script>
+
+    var firstResponse = true;
 
     function sumStars(repos) {
       var total = 0;
@@ -44,39 +48,42 @@
     });
 
     document.addEventListener('polymer-response', function() {
-      var data = document.querySelector('github-repos-cards').response.data;
+      if (firstResponse === true) {
+        firstResponse = false;
+        var data = document.querySelector('github-repos-cards').response.data;
 
-      var owner = data[0].owner;
-      var a = document.createElement('a');
-      a.href = owner.html_url;
-      a.innerText = owner.login;
+        var owner = data[0].owner;
+        var a = document.createElement('a');
+        a.href = owner.html_url;
+        a.innerText = owner.login;
 
-      var insert = document.getElementById('insert');
-      insert.appendChild(a);
+        var insert = document.getElementById('insert');
+        insert.appendChild(a);
 
-      var starDiv = document.createElement('starDiv');
-      var starIcon = document.createElement('core-icon');
-      starIcon.icon = 'star';
+        var starDiv = document.createElement('starDiv');
+        var starIcon = document.createElement('core-icon');
+        starIcon.icon = 'star';
 
-      var stargazers = sumStars(data);
-      console.log(stargazers + ' stargazers');
-      starDiv.appendChild(document.createTextNode(stargazers + ' Total '))  ;
-      starDiv.appendChild(starIcon);
-      starDiv.appendChild(document.createTextNode('Gazers'));
-      insert.appendChild(starDiv);
+        var stargazers = sumStars(data);
+        console.log(stargazers + ' stargazers');
+        starDiv.appendChild(document.createTextNode(stargazers + ' Total '))  ;
+        starDiv.appendChild(starIcon);
+        starDiv.appendChild(document.createTextNode('Gazers'));
+        insert.appendChild(starDiv);
 
-      var githubRepoCard = document.createElement('github-repo-card');
-      // var data = data[0];
-      var data = {};
-      data.name = 'AllTheThings';
-      data.description = 'This is a <github-repo-card> created with a user generated object.';
-      data.html_url = 'https://github.com/octocat/Spoon-Knife';
-      data.default_branch = 'master';
-      data.updated_at = "2015-01-21T17:29:25Z";
-      
-      githubRepoCard.repository = data;
-      var insert2 = document.getElementById('insert2');
-      insert2.appendChild(githubRepoCard);
+        var githubRepoCard = document.createElement('github-repo-card');
+        // var data = data[0];
+        var data = {};
+        data.name = 'AllTheThings';
+        data.description = 'This is a <github-repo-card> created with a user generated object.';
+        data.html_url = 'https://github.com/octocat/Spoon-Knife';
+        data.default_branch = 'master';
+        data.updated_at = "2015-01-21T17:29:25Z";
+        
+        githubRepoCard.repository = data;
+        var insert2 = document.getElementById('insert2');
+        insert2.appendChild(githubRepoCard);
+      }
     });
 
   </script>
