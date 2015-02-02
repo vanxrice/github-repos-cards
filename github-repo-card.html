@@ -2,22 +2,20 @@
 
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-shadow/paper-shadow.html">
+<link rel="import" href="../core-item/core-item.html">
 
 <script src="../time-elements/time-elements.js"></script>
 
 <!--
-A Polymer web component that displays git repository data from Github. A JSONP request is made for the provided
-request. This element was created to be used with Github's API, and expects a response in the form of Github's API v3.
-The response object is exposed via data binding, which can be used to set the object or to use the object outside of
-this element, see the demo for an example.
+A Polymer element that displays a Github repository object in a card
 
 ##### Example
 
-    <github-repo-card request="https://api.github.com/users/vanxrice/repos?type=owner&sort=updated&direction=desc">
+    <github-repo-card repository="{{repository}}">
     </github-repo-card>
 
 @element github-repo-card
-@blurb A Polymer web component that fetches public git repository data from Github.
+@blurb A Polymer element that displays a Github repository object in a card
 @status alpha
 @homepage http://vanxrice.github.io/github-repos-cards
 @demo http://vanxrice.github.io/github-repos-cards/demo.html
@@ -27,20 +25,20 @@ this element, see the demo for an example.
     <link rel="stylesheet" href="github-repos-cards.css">
 
     <paper-shadow z="2" class="card">
-      <div class="repo-head" horizontal layout>
+      <div class="repo-head text-title" horizontal layout>
         <a href="{{repository.html_url}}" horizontal layout center flex>{{repository.name}}</a>
-        <div horizontal center layout>
-          <p>{{repository.stargazers_count}}</p>
-          <core-icon icon="star"></core-icon>
-          <p>{{repository.watchers_count}}</p>
-          <core-icon icon="visibility"></core-icon>
+        <div horizontal center layout class="repo-stats">
+          <core-item class="small first-icon" icon="star" label="{{repository.stargazers_count}}"></core-item>
+          <core-item class="small" icon="visibility" label="{{repository.watchers_count}}"></core-item>
         </div>
       </div>
 
-      <div class="repo-body" vertical layout>
-        <p>{{repository.description}} - <a href="{{repository.html_url + '#readme'}}">README</a></p>
+      <div class="repo-body text-subhead" vertical layout>
+        <template if="{{repository.description}}">
+          <p class="repo-desc">{{repository.description}} - <a href="{{repository.html_url + '#readme'}}">README</a></p>
+        </template>
         
-        <div horizontal layout end>
+        <div horizontal layout end class="repo-commit-detail text-subhead">
           <p flex>Latest commit to <b>{{repository.default_branch}}</b>
             <time is="relative-time" datetime="{{repository.updated_at}}"></time>
           </p>

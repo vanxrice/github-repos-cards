@@ -5,10 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>github-repos-cards Demo</title>
     <script src="../webcomponentsjs/webcomponents.js"></script>
+
+    <link rel="import" href="../core-icon-button/core-icon-button.html">
+
     <link rel="import" href="github-repos-cards.html">
+    <link rel="import" href="github-repo-card.html">
+
   </head>
   <body unresolved>
     <p>An `github-repos-cards` looks like this:</p>
-    <github-repos-cards request="https://api.github.com/users/vanxrice/repos?type=owner&sort=updated&direction=asc"></github-repos-cards>
+
+    <github-repos-cards request="https://api.github.com/users/vanxrice/repos?type=owner&sort=updated&direction=desc">
+    </github-repos-cards>
+
+    <p>Javascript ninjas can use the response object as they wish, you could create something like this for a header or footer:
+    <div vertical layout center start id="insert">
+    </div>
+
+    <p>The card is available as a standalone element, `github-repo-card` looks like this:</p>
+    <div vertical layout center start id='insert2'></div>
+
   </body>
+  <script>
+
+    function sumStars(repos) {
+      var total = 0;
+      if (repos) {
+        for (var i = 0; i < repos.length; ++i) {
+          console.log(repos[i]);
+          total += repos[i].stargazers_count;
+        }
+      }
+      return total;
+    }
+
+    document.addEventListener('polymer-ready', function() {
+      console.log('ready');
+    });
+
+    document.addEventListener('polymer-response', function() {
+      var data = document.querySelector('github-repos-cards').response.data;
+
+      var owner = data[0].owner;
+      var a = document.createElement('a');
+      a.href = owner.html_url;
+      a.innerText = owner.login;
+
+      var insert = document.getElementById('insert');
+      insert.appendChild(a);
+
+      var starDiv = document.createElement('starDiv');
+      var starIcon = document.createElement('core-icon');
+      starIcon.icon = 'star';
+
+      var stargazers = sumStars(data);
+      console.log(stargazers + ' stargazers');
+      starDiv.appendChild(document.createTextNode(stargazers + ' Total '))  ;
+      starDiv.appendChild(starIcon);
+      starDiv.appendChild(document.createTextNode('Gazers'));
+      insert.appendChild(starDiv);
+
+      var githubRepoCard = document.createElement('github-repo-card');
+      githubRepoCard.repository = data[0];
+      var insert2 = document.getElementById('insert2');
+      insert2.appendChild(githubRepoCard);
+    });
+
+  </script>
 </html>
