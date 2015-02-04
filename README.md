@@ -7,9 +7,9 @@ See the [component page](http://vanxrice.github.io/github-repos-cards/components
 See the [demo page](http://vanxrice.github.io/github-repos-cards/components/github-repos-cards/demo.html).
 
 > A Polymer web component that displays git repository data from Github. This element was created to be used with Github's
-API, and expects a response in the form of Github's API v3. The response object is exposed via data binding, which can be
-used to set the object or to use the object outside of this element, see the demo for an example. A JSONP request is made for
-the provided request string. 
+API, and expects a response in the form of Github's API v3. A JSONP request is made for the provided request string. 
+
+> The response object is exposed via data binding, and can be used to set the model or to use the request outside of this element, see the demo for an example.
 
 > &lt;github-repo-card&gt; is the standalone card, it does not make any JSON request and may be used without &lt;github-repos-cards&gt;
 
