@@ -1,0 +1,71 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-shadow/paper-shadow.html">
+<link rel="import" href="../core-item/core-item.html">
+
+<script src="../time-elements/time-elements.js"></script>
+
+<!--
+A Polymer element that displays a Github repository object in a card
+
+##### Example
+
+    <github-repo-card repository="{{repository}}">
+    </github-repo-card>
+
+@element github-repo-card
+@blurb A Polymer element that displays a Github repository object in a card
+@status alpha
+@homepage http://vanxrice.github.io/github-repos-cards/components/github-repos-cards
+@demo http://vanxrice.github.io/github-repos-cards/components/github-repos-cards/demo.html
+-->
+<polymer-element name="github-repo-card" attributes="repository">
+  <template is="auto binding">
+    <link rel="stylesheet" href="github-repos-cards.css" shim-shadowdom>
+
+    <paper-shadow z="2" class="card">
+      <div class="repo-head text-title" horizontal layout>
+        <a href="{{repository.html_url}}" horizontal layout center flex>{{repository.name}}</a>
+        <div horizontal center layout class="repo-stats">
+          <core-item class="small first-icon" icon="star" label="{{repository.stargazers_count || 0}}"></core-item>
+          <core-item class="small" icon="visibility" label="{{repository.watchers_count || 0}}"></core-item>
+        </div>
+      </div>
+
+      <div class="repo-body text-subhead" vertical layout>
+        <template if="{{repository.description}}">
+          <p class="repo-desc">{{repository.description}} - <a href="{{repository.html_url + '#readme'}}">README</a></p>
+        </template>
+        
+        <div horizontal layout center class="repo-commit-detail text-subhead">
+          <span flex>Latest commit to <b>{{repository.default_branch}}</b></span>
+          <time is="relative-time" datetime="{{repository.updated_at}}"></time>
+          <a href="{{repository.html_url + '/archive/' + repository.default_branch + '.zip'}}">
+            <paper-icon-button noink icon="cloud-download"></paper-icon-button>
+          </a>
+        </div>
+      </div>
+    </paper-shadow>
+
+    <content></content>
+  </template>
+  <script>
+    Polymer('github-repo-card', {
+      /**
+       * The `repository` attribute sets the repository object for the github-repo-card to render. It is expected in
+       * the form of Github's API v3. However any object with the correct attributes will be displayed.
+       *
+       * See Github's documentation for more information, https://developer.github.com/v3/repos/.
+       *
+       * @attribute repository
+       * @type object
+       * @default null
+       */
+      repository: null,
+
+      ready: function () {
+      }
+    });
+  </script>
+</polymer-element>

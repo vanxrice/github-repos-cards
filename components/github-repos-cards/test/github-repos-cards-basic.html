@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>github-repos-cards</title>
+
+  <script src="../../webcomponentsjs/webcomponents.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../github-repos-cards.html">
+
+</head>
+<body>
+
+  <github-repos-cards id="fixture"></github-repos-cards>
+
+  <script>
+    var myEl = document.getElementById('fixture');
+
+    suite('<github-repos-cards>', function() {
+
+      test('defines the "author" property', function() {
+        assert.equal(myEl.author, 'Dimitri Glazkov');
+      });
+
+      test('says hello', function() {
+        assert.equal(myEl.sayHello(), 'github-repos-cards says, Hello World!');
+        var greetings = myEl.sayHello('greetings Earthlings');
+        assert.equal(greetings, 'github-repos-cards says, greetings Earthlings');
+      });
+
+      test('fires lasers', function(done) {
+        myEl.addEventListener('github-repos-cards-lasers-success', function(event) {
+          assert.equal(event.detail.sound, 'Pew pew pew!');
+          done();
+        });
+        myEl.fireLasers();
+      });
+
+    });
+  </script>
+
+</body>
+</html>

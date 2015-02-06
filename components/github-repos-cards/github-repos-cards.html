@@ -1,0 +1,93 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../polymer-jsonp/polymer-jsonp.html">
+
+<link rel="import" href="github-repo-card.html">
+
+<!--
+A Polymer web component that displays git repository data as a grid collection of cards. The &lt;github-repo-card&gt; displays basic repo information, including: stargazer/watcher count, repo description, a link to the README, default branch and last commit time, and includes a download link. &lt;github-repo-card&gt; is the standalone card, it does not make any request and may be used without &lt;github-repos-cards&gt;. This project intentionally does not define much styling (CSS or otherwise), you should style these elements in your application so they integrate well.
+
+This element was intended to be used with Github's API, and expects a response in the form of Github's API v3. However requests are not restricted to Github, a JSONP request is made for the provided request string - this allows you to use a different REST API.
+
+The response object is exposed as `response`, this can be used to manually set the model or to use the request outside of this element. See the demo for an example that sums stargazers.
+
+##### Example
+
+    <github-repos-cards maxRepoCount="5" response="{{ghResponse}}"
+      request="https://api.github.com/users/vanxrice/repos?type=owner&sort=updated&direction=desc">
+    </github-repos-cards>
+
+@element github-repos-cards
+@blurb A Polymer web component that fetches public git repository data from Github.
+@status beta
+@homepage http://vanxrice.github.io/github-repos-cards/components/github-repos-cards
+@demo http://vanxrice.github.io/github-repos-cards/components/github-repos-cards/demo.html
+-->
+<polymer-element name="github-repos-cards" attributes="request response maxRepoCount">
+  <template is="auto binding">
+    <link rel="stylesheet" href="github-repos-cards.css">
+
+    <polymer-jsonp auto handleAs="json"
+      url="{{request + '&callback='}}"
+      response="{{response}}"
+      on-polymer-response="{{onResponse}}">
+    </polymer-jsonp>
+
+    <div horizontal layout wrap around-justified>
+      <template repeat="{{repositories as repository}}">
+        <github-repo-card repository="{{repository}}"></github-repo-card>
+      </template>
+    </div>
+
+    <content></content>
+  </template>
+  <script>
+    Polymer('github-repos-cards', {
+      /**
+       * The `request` attribute sets the request string for a JSONP request. This string should contain all
+       * request parameters, and expects the request to contain '?' as a callback parameter will be appended.
+       *   url="{{request + '&callback='}}"
+       *
+       * See Github's documentation for more information, https://developer.github.com/v3/repos/.
+       *
+       * @attribute request
+       * @type string
+       * @default 'https://api.github.com/users/octocat/repos?'
+       */
+      request: 'https://api.github.com/users/octocat/repos?',
+
+      /**
+       * The `response` attribute is bound to the response object from the JSONP request. The can be used 
+       * to create additional elements.
+       *
+       * See Github's documentation for more information, https://developer.github.com/v3/repos/.
+       *
+       * @attribute response
+       * @type string
+       * @default null
+       */
+      response: null,
+
+      /**
+       * The `maxRepoCount` attribute is the upper limit of repos to show from the request. It uses the first
+       * N repos up to maxRepoCount (i.e. request.data[0..maxRepoCount])
+       *
+       * @attribute maxRepoCount
+       * @type int
+       * @default null
+       */
+      maxRepoCount: null,
+
+      ready: function () {
+      },
+
+      onResponse: function (e) {
+        if (this.maxRepoCount && this.response.data.length > this.maxRepoCount) {
+          this.repositories = this.response.data.slice(0, this.maxRepoCount); // remove repos
+        } else {
+          this.repositories = this.response.data;
+        }
+      }
+    });
+  </script>
+</polymer-element>

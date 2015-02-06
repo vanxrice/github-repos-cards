@@ -1,0 +1,11 @@
+{
+  "name": "github-repos-cards#gh-pages",
+  "private": true,
+  "resolutions": {
+    "polymer": "^0.5.4",
+    "core-component-page": "^0.5"
+  },
+  "dependencies": {
+    "github-repos-cards": "vanxrice/github-repos-cards#master"
+  }
+}
